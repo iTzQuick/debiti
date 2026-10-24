@@ -448,7 +448,7 @@ function budgetCalc(c,today,ev){
   spese.forEach(s=>occBetween(s,c.start,c.end).forEach(d=>(s.fonte?coperte:fisse).push({nome:s.nome,date:d,amt:s.importo,done:(s.pagate||[]).includes(d)})));
   fisse.sort((a,b)=>a.date<b.date?-1:1);
   const acc=r2(vers.filter(v=>inC(v.data)).reduce((a,v)=>a+v.importo,0));
-  const entr=c.cur?(c.cur.stipendio||0)+(c.cur.extra||0):0;
+  const entr=c.cur?(c.cur.stipendio||0)+(c.cur.extra||0)+(c.cur.riporto||0):0;
   const sR=sum(rate), sF=sum(fisse);
   const disp=entr-sR-sF-acc;
   const movsC=movs.filter(m=>inC(m.data));
@@ -464,6 +464,14 @@ function budgetCalc(c,today,ev){
   return {rate,fisse,coperte,acc,entr,sR,sF,disp,speso,resta,left,media,proiez,movsC,total,sulConto,daPagare};
 }
 
+function prevLeftover(today,ev){
+  const ms=mesi.filter(m=>validDate(m.data)&&m.data<=today).sort((a,b)=>a.data<b.data?1:-1);
+  const m0=ms[0]; if(!m0) return 0;
+  const p=parse(m0.data), end=addMonths(iso(p.y,p.m,25),1);
+  if(today<end) return 0;
+  const b=budgetCalc({cur:m0,start:m0.data,end},addDays(end,-1),ev);
+  return Math.max(0,r2(b.resta));
+}
 function svSaldo(sv,date){
   const v=vers.filter(x=>x.salvadanaio===sv.id&&x.data<=date).reduce((a,x)=>a+x.importo,0);
   const out=spese.filter(s=>s.fonte===sv.id).reduce((a,s)=>a+occBetween(s,sv.creato||"2000-01-01",addDays(date,1)).length*s.importo,0);
@@ -484,7 +492,7 @@ function salaryCount(today,deadline){
 
 /* ---------- rendering ---------- */
 function render(){
-  const saved={}; document.querySelectorAll("[data-f]").forEach(i=>saved[i.id]=i.value);
+  const saved={}; document.querySelectorAll("[data-f]").forEach(i=>{ if(i.dataset.dirty) saved[i.id]=i.value; });
   const focusId=document.activeElement&&document.activeElement.id;
   const today=todayISO();
   const ev=projection();
@@ -496,7 +504,7 @@ function render(){
     renderSpese(today);
     renderPatr(today); renderSalv(today); renderSimSelect();
   }
-  Object.entries(saved).forEach(([id,v])=>{ const el=$(id); if(el&&el.value!==v) el.value=v; });
+  Object.entries(saved).forEach(([id,v])=>{ const el=$(id); if(el){ if(el.value!==v) el.value=v; el.dataset.dirty="1"; } });
   if(focusId&&$(focusId)&&$(focusId)!==document.activeElement) try{ $(focusId).focus({preventScroll:true}); }catch(e){}
   renderSim();
 }
@@ -507,11 +515,14 @@ function renderTabs(){
 }
 
 /* Mese */
-function meseForm(m,today){
+function meseForm(m,today,avanzo){
   return `<form class="form" data-form="mese" data-id="${m?m.id:""}" novalidate>
     <label>Stipendio netto (€)<input data-f id="m-imp" inputmode="decimal" value="${m?it(m.stipendio):""}" placeholder="1670,00" autocomplete="off"></label>
     <label>Arrivato il<input data-f id="m-data" type="date" value="${m?m.data:today}"></label>
     <label class="full">Entrate extra (€) <span class="hint">13ª, 14ª, rimborsi. Lascia 0 se non ci sono</span><input data-f id="m-extra" inputmode="decimal" value="${m?it(m.extra||0):"0"}" autocomplete="off"></label>
+    ${m?`<label class="full">Avanzo dal mese prima (€)<input data-f id="m-rip" inputmode="decimal" value="${it(m.riporto||0)}" autocomplete="off"></label>`
+      :`<label>Avanzo dal mese prima (€) <span class="hint">calcolato dall'app, puoi correggerlo</span><input data-f id="m-rip" inputmode="decimal" value="${it(avanzo||0)}" autocomplete="off"></label>
+    <label>Dove lo metto?<select data-f id="m-dest"><option value="">Nel budget di questo mese</option>${salv.slice().sort((a,b)=>(a.ordine||0)-(b.ordine||0)).map(v=>`<option value="${v.id}">Salvadanaio ${esc(v.nome)}</option>`).join("")}</select></label>`}
     <p class="ferr full" id="m-err" hidden></p>
     <div class="actions full"><button class="btn primary" type="submit">Salva stipendio</button>${m?'<button class="btn" type="button" data-cancel>Annulla</button>':''}</div>
   </form>`;
@@ -521,7 +532,7 @@ function renderBudget(today,ev){
   if(!c.cur || (editing&&editing.kind==="mese")){
     box.innerHTML=`<div class="sec-head"><h2>${c.cur?"Modifica stipendio":"È arrivato lo stipendio?"}</h2></div>
       ${c.cur?"":`<p class="muted">Inseriscilo e l'app calcola quanto ti resta per vivere fino al prossimo, togliendo rate e spese fisse.</p>`}
-      ${meseForm(c.cur,today)}`;
+      ${meseForm(c.cur,today,c.cur?null:prevLeftover(today,ev))}`;
     return;
   }
   const b=budgetCalc(c,today,ev);
@@ -542,7 +553,8 @@ function renderBudget(today,ev){
       ${pill}
     </div>
     <div class="lines">
-      <div class="line"><span>Stipendio${c.cur.extra?" + extra":""}</span><span class="num">${eur.format(b.entr)}</span></div>
+      <div class="line"><span>Stipendio${c.cur.extra?" + extra":""}</span><span class="num">${eur.format((c.cur.stipendio||0)+(c.cur.extra||0))}</span></div>
+      ${c.cur.riporto?`<div class="line"><span>Avanzo del mese prima</span><span class="num">+${eur.format(c.cur.riporto)}</span></div>`:""}
       <details><summary><span>Rate prestiti</span><span class="num">−${eur.format(b.sR)}</span></summary>${sub(b.rate)}</details>
       <details><summary><span>Spese fisse</span><span class="num">−${eur.format(b.sF)}</span></summary>${sub(b.fisse)}</details>
       ${b.acc?`<div class="line"><span>${b.acc>0?"Messi nei salvadanai":"Presi dai salvadanai"}</span><span class="num">${b.acc>0?"−":"+"}${eur.format(Math.abs(b.acc))}</span></div>`:""}
@@ -926,7 +938,10 @@ async function saveMese(form){
   if(!(st>0)) return showErr("m-err","Scrivi lo stipendio, per esempio 1670.");
   if(!validDate(data)) return showErr("m-err","Scegli il giorno in cui è arrivato.");
   if(!(extra>=0)) return showErr("m-err","Le entrate extra devono essere 0 o un numero positivo.");
-  await db.doc("mesi/"+data).set({stipendio:r2(st),data,extra:r2(extra)});
+  const rip=toNum(($("m-rip")||{}).value||"0"), dest=($("m-dest")||{}).value||"";
+  if(!(rip>=0)) return showErr("m-err","L'avanzo deve essere 0 o un numero positivo.");
+  await db.doc("mesi/"+data).set({stipendio:r2(st),data,extra:r2(extra),riporto:r2(rip)});
+  if(!old&&dest&&rip>0) await db.collection("versamenti").add({salvadanaio:dest,importo:r2(rip),data});
   if(old&&old!==data) await db.doc("mesi/"+old).delete();
   editing=null; render(); toast("Stipendio salvato: "+eur.format(st+extra));
 }
@@ -958,6 +973,7 @@ document.addEventListener("submit",async e=>{
   }catch(err){ fail(err); } finally{ busy=false; }
 });
 
+document.addEventListener("input",e=>{ if(e.target.matches&&e.target.matches("[data-f]")) e.target.dataset.dirty="1"; },true);
 document.addEventListener("input",e=>{
   const id=e.target.id||"";
   if(id.startsWith("sim-")) renderSim();
