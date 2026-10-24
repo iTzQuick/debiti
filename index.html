@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Conto alla Rovescia Debiti</title>
 <meta name="description" content="Budget del mese, prestiti, spese fisse e obiettivi di risparmio.">
-<meta name="theme-color" content="#EEF2F4" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0F171C" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F2F2F7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -16,22 +16,35 @@
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
 <style>
 /* Layout: app a una colonna per telefono. Titolo e + Spesa in alto, quattro schede nella barra fissa in basso. */
 :root{
-  --bg:#EEF2F4; --surface:#FFFFFF; --fg:#13212B; --muted:#5C6B76; --line:#D5DDE2;
-  --paid:#1E6B57; --paid-soft:#D7EBE4; --debt:#B5432C; --debt-soft:#F6E1DA; --track:#E3E9EC; --warn:#946200; --warn-soft:#F6EBCF;
-  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
-  --f-body:"Figtree", "Segoe UI", system-ui, sans-serif;
-  --f-num:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --bg:#F2F2F7; --surface:#FFFFFF; --fg:#1C1C1E; --muted:#86868B; --line:#E5E5EA; --bar:rgba(255,255,255,.86);
+  --accent:#FF2D55; --accent-soft:#FFE6EB; --on-accent:#FFFFFF;
+  --paid:#FF2D55; --paid-soft:#FFE6EB; --debt:#FF3B30; --debt-soft:#FFE7E5; --track:#EBEBF0;
+  --good:#1E9E48; --good-soft:#E2F6E8; --warn:#B25E00; --warn-soft:#FFF0DA;
+  --c1:#FF2D55; --c1s:#FFE6EB; --c2:#00A99A; --c2s:#DAF4F1; --c3:#A847D8; --c3s:#F3E5FA;
+  --c4:#0A7AFF; --c4s:#E0EDFF; --c5:#E09A00; --c5s:#FFF2D2; --c6:#FF6A00; --c6s:#FFE9D9;
+  --grad:linear-gradient(135deg,#FF2D7A 0%,#FF3B30 100%);
+  --f-display:-apple-system,BlinkMacSystemFont,"SF Pro Display","Inter",system-ui,sans-serif;
+  --f-body:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter",system-ui,sans-serif;
+  --f-num:-apple-system,BlinkMacSystemFont,"SF Pro Display","Inter",system-ui,sans-serif;
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
-  --bg:#0F171C; --surface:#172229; --fg:#E7EEF1; --muted:#93A3AD; --line:#2A3943;
-  --paid:#5CC3A2; --paid-soft:#173A31; --debt:#EF8A70; --debt-soft:#3D231C; --track:#24323B; --warn:#E8B64A; --warn-soft:#3A2F14; color-scheme:dark }}
+  --bg:#000000; --surface:#1C1C1E; --fg:#F5F5F7; --muted:#98989D; --line:#2C2C2E; --bar:rgba(28,28,30,.86);
+  --accent:#FF375F; --accent-soft:#3B1621; --on-accent:#FFFFFF;
+  --paid:#FF375F; --paid-soft:#3B1621; --debt:#FF453A; --debt-soft:#3B1916; --track:#2C2C2E;
+  --good:#30D158; --good-soft:#123020; --warn:#FFB340; --warn-soft:#3A2A10;
+  --c1:#FF375F; --c1s:#3B1621; --c2:#30C9BA; --c2s:#0E2E2B; --c3:#BF5AF2; --c3s:#2D1A3A;
+  --c4:#409CFF; --c4s:#10243F; --c5:#FFC233; --c5s:#3A2D0A; --c6:#FF8A3D; --c6s:#3A220E; color-scheme:dark }}
 :root[data-theme="dark"]{
-  --bg:#0F171C; --surface:#172229; --fg:#E7EEF1; --muted:#93A3AD; --line:#2A3943;
-  --paid:#5CC3A2; --paid-soft:#173A31; --debt:#EF8A70; --debt-soft:#3D231C; --track:#24323B; --warn:#E8B64A; --warn-soft:#3A2F14; color-scheme:dark }
+  --bg:#000000; --surface:#1C1C1E; --fg:#F5F5F7; --muted:#98989D; --line:#2C2C2E; --bar:rgba(28,28,30,.86);
+  --accent:#FF375F; --accent-soft:#3B1621; --on-accent:#FFFFFF;
+  --paid:#FF375F; --paid-soft:#3B1621; --debt:#FF453A; --debt-soft:#3B1916; --track:#2C2C2E;
+  --good:#30D158; --good-soft:#123020; --warn:#FFB340; --warn-soft:#3A2A10;
+  --c1:#FF375F; --c1s:#3B1621; --c2:#30C9BA; --c2s:#0E2E2B; --c3:#BF5AF2; --c3s:#2D1A3A;
+  --c4:#409CFF; --c4s:#10243F; --c5:#FFC233; --c5s:#3A2D0A; --c6:#FF8A3D; --c6s:#3A220E; color-scheme:dark }
 
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -44,55 +57,57 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .panel{display:flex;flex-direction:column;gap:20px}
 .num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
 h1,h2{font-family:var(--f-display);margin:0;text-wrap:balance}
-h1{font-size:1.45rem;font-weight:800;letter-spacing:-.01em}
-h2{font-size:1.05rem;font-weight:800;letter-spacing:.01em}
+h1{font-size:2rem;font-weight:800;letter-spacing:-.035em;line-height:1.05}
+h2{font-size:1.18rem;font-weight:700;letter-spacing:-.02em}
 p{margin:0}
 .muted{color:var(--muted);font-size:.88rem}
-.label{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+.label{font-size:.8rem;color:var(--muted);font-weight:500}
+.eyebrow{font-size:.82rem;color:var(--accent);font-weight:600}
+.u{font-size:.5em;font-weight:700;color:var(--accent);margin-left:.12em;letter-spacing:0}
 button{font:inherit;cursor:pointer;touch-action:manipulation;-webkit-user-select:none;user-select:none}
 button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--paid);outline-offset:2px}
 
 .appbar{position:sticky;top:env(safe-area-inset-top, 0px);z-index:8;background:var(--bg);padding-block:12px 10px;display:flex;flex-direction:column;gap:10px}
 .appbar-row{display:flex;justify-content:space-between;align-items:center;gap:10px}
-.appbar h1{font-size:1.5rem}
-.addbtn{border:0;background:var(--paid);color:var(--surface);border-radius:12px;min-height:46px;padding:0 18px;font-weight:700;font-size:1rem;white-space:nowrap}
+.appbar h1{font-size:2.1rem}
+.addbtn{border:0;background:var(--grad);box-shadow:0 6px 16px -6px rgba(255,45,85,.55);color:var(--on-accent);border-radius:12px;min-height:46px;padding:0 18px;font-weight:700;font-size:1rem;white-space:nowrap}
 .addbtn:disabled{opacity:.4}
 
 /* Schede */
-.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:15;background:var(--surface);border-top:1px solid var(--line);padding-top:6px;padding-bottom:calc(6px + env(safe-area-inset-bottom, 0px));padding-left:max(8px, env(safe-area-inset-left, 0px));padding-right:max(8px, env(safe-area-inset-right, 0px))}
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:15;background:var(--bar);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-top:1px solid var(--line);padding-top:6px;padding-bottom:calc(6px + env(safe-area-inset-bottom, 0px));padding-left:max(8px, env(safe-area-inset-left, 0px));padding-right:max(8px, env(safe-area-inset-right, 0px))}
 label.btn{display:inline-flex;align-items:center;cursor:pointer}
 .restore{display:flex;flex-direction:column;gap:10px;background:var(--warn-soft);color:var(--fg);border-radius:10px;padding:12px}
 .tabs{display:flex;gap:2px;max-width:640px;margin:0 auto}
 .tabs button{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:54px;padding:6px 2px;border:0;background:transparent;color:var(--muted);font-size:.72rem;font-weight:600;border-radius:12px}
 .tabs svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.tabs button[aria-selected="true"]{color:var(--paid);background:var(--paid-soft)}
+.tabs button[aria-selected="true"]{color:var(--accent);background:transparent}
 .tabs button[aria-selected="true"] svg{stroke-width:2.3}
-.fab{position:fixed;z-index:16;right:max(18px, calc(env(safe-area-inset-right, 0px) + 18px));bottom:calc(84px + env(safe-area-inset-bottom, 0px) + var(--lift, 0px));width:60px;height:60px;border-radius:50%;border:0;background:var(--paid);color:var(--surface);font-size:2rem;line-height:1;font-weight:500;display:grid;place-items:center}
+.fab{position:fixed;z-index:16;right:max(18px, calc(env(safe-area-inset-right, 0px) + 18px));bottom:calc(84px + env(safe-area-inset-bottom, 0px) + var(--lift, 0px));width:60px;height:60px;border-radius:50%;border:0;background:var(--paid);color:var(--on-accent);font-size:2rem;line-height:1;font-weight:500;display:grid;place-items:center}
 .fab:disabled{opacity:.4}
 .scrim{position:fixed;inset:0;z-index:28;background:var(--fg);opacity:.35}
 .sheet{position:fixed;left:0;right:0;top:0;z-index:30;max-width:640px;margin:0 auto;background:var(--surface);border-radius:0 0 20px 20px;border:1px solid var(--line);border-top:0;
   display:flex;flex-direction:column;gap:14px;padding-top:calc(14px + env(safe-area-inset-top, 0px));padding-bottom:18px;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
 .grab{display:none}
 
-.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.card{background:var(--surface);border:0;border-radius:20px;padding:14px 16px;display:flex;flex-direction:column;gap:12px}
 .sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
 
 /* Totale debito */
 .total{display:flex;flex-direction:column;gap:12px}
-.big{font-family:var(--f-display);font-weight:800;font-size:clamp(2.4rem,10vw,3.4rem);line-height:1;letter-spacing:-.02em}
+.big{font-family:var(--f-display);font-weight:800;font-size:clamp(2.6rem,12vw,3.6rem);line-height:1;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
 .big.neg{color:var(--debt)}
-.bar{height:10px;border-radius:5px;background:var(--debt-soft);overflow:hidden}
-.bar i{display:block;height:100%;background:var(--paid);border-radius:5px;transition:width .5s}
+.bar{height:10px;border-radius:5px;background:var(--track);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--grad);border-radius:5px;transition:width .5s}
 .bar.goal{background:var(--track)}
 .split{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:.88rem;color:var(--muted)}
 .split b{color:var(--fg);font-weight:600}
-.split .ok b{color:var(--paid)}
+.split .ok b{color:var(--accent)}
 
 /* Budget */
 .sub{color:var(--muted);font-size:.95rem}
 .sub b{color:var(--fg);font-family:var(--f-num)}
 .pill{align-self:flex-start;font-size:.82rem;font-weight:600;padding:5px 10px;border-radius:99px;background:var(--track);color:var(--muted)}
-.pill.good{background:var(--paid-soft);color:var(--paid)}
+.pill.good{background:var(--good-soft);color:var(--good)}
 .pill.bad{background:var(--debt-soft);color:var(--debt)}
 .pill.warn{background:var(--warn-soft);color:var(--warn)}
 .lines{display:flex;flex-direction:column}
@@ -116,24 +131,34 @@ label.btn{display:inline-flex;align-items:center;cursor:pointer}
 .qrow input:focus-visible{outline:none}
 .qrow:focus-within{border-color:var(--paid)}
 .catgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
-.cat{border:1px solid var(--line);background:var(--bg);color:var(--fg);border-radius:12px;padding:10px 4px;min-height:56px;font-weight:600;font-size:.92rem}
+.cat{border:0;background:var(--cs,var(--bg));color:var(--fg);border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px 4px;min-height:56px;font-weight:600;font-size:.92rem}
 .cat:active{background:var(--paid-soft)}
 .catbars{display:flex;flex-direction:column;gap:8px}
-.catbar{display:grid;grid-template-columns:96px minmax(0,1fr) auto;gap:10px;align-items:center;font-size:.88rem}
+.catbar{display:grid;grid-template-columns:130px minmax(0,1fr) auto;gap:10px;align-items:center;font-size:.88rem}
 .catbar .t{height:8px;border-radius:4px;background:var(--track);overflow:hidden}
-.catbar .t i{display:block;height:100%;background:var(--fg);opacity:.75;border-radius:4px}
+.catbar .t i{display:block;height:100%;background:var(--c,var(--accent));border-radius:4px}
+
+.ico{width:32px;height:32px;border-radius:10px;background:var(--cs);color:var(--c);display:inline-grid;place-items:center;font-style:normal;font-weight:700;font-size:.9rem;flex:none}
+.ico.lg{width:40px;height:40px;border-radius:12px;font-size:1.05rem}
+.ico-row{display:flex;align-items:center;gap:10px;min-width:0}
+.cat .ico{width:28px;height:28px;border-radius:9px;background:var(--surface)}
+.hero{background:var(--grad);color:#fff;border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:8px;box-shadow:0 14px 30px -14px rgba(255,45,85,.6)}
+.hero .label,.hero .sub{color:rgba(255,255,255,.88)}
+.hero .sub b{color:#fff}
+.hero .big,.hero .big .u{color:#fff}
+.hero .pill{background:rgba(255,255,255,.2);color:#fff}
 
 /* Liste */
 .list{display:flex;flex-direction:column;gap:10px}
-.loan{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
-.loan.cost{border-left:4px solid var(--debt)}
+.loan{background:var(--surface);border:0;border-radius:20px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.loan.cost{box-shadow:inset 0 0 0 1.5px var(--debt-soft)}
 .loan.done .dim{opacity:.62}
 .stack{display:flex;flex-direction:column;gap:10px}
 .loan-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
 .loan-name{font-family:var(--f-display);font-weight:800;font-size:1.15rem}
 .chip{font-size:.7rem;font-weight:600;padding:2px 8px;border-radius:99px;background:var(--track);color:var(--muted);letter-spacing:.02em;white-space:nowrap}
 .chip.hot{background:var(--debt-soft);color:var(--debt)}
-.chip.ok{background:var(--paid-soft);color:var(--paid)}
+.chip.ok{background:var(--good-soft);color:var(--good)}
 .chip.warn{background:var(--warn-soft);color:var(--warn)}
 .loan-res{font-family:var(--f-num);font-weight:600;font-size:1.25rem;font-variant-numeric:tabular-nums}
 .loan .bar{height:6px;background:var(--track)}
@@ -142,10 +167,10 @@ label.btn{display:inline-flex;align-items:center;cursor:pointer}
 .facts .v{font-family:var(--f-num);font-size:.92rem;font-variant-numeric:tabular-nums}
 .actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .btn{border:1px solid var(--line);background:transparent;color:var(--fg);border-radius:10px;padding:10px 14px;min-height:44px;font-weight:600;font-size:.92rem}
-.btn.primary{background:var(--paid);border-color:var(--paid);color:var(--surface)}
+.btn.primary{background:var(--grad);border-color:transparent;color:var(--on-accent)}
 .btn.ghost{border-color:transparent;color:var(--muted);padding-inline:8px}
 .btn.danger{color:var(--debt);border-color:var(--debt-soft)}
-.btn.danger.arm{background:var(--debt);border-color:var(--debt);color:var(--surface)}
+.btn.danger.arm{background:var(--debt);border-color:var(--debt);color:var(--on-accent)}
 .btn:disabled{opacity:.45;cursor:default}
 .extra{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .extra input,.inline-in{width:124px;min-height:44px;padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--fg);font-family:var(--f-num);font-size:16px}
@@ -162,7 +187,7 @@ label.btn{display:inline-flex;align-items:center;cursor:pointer}
 
 /* KPI */
 .kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.kpi{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.kpi{background:var(--surface);border:0;border-radius:20px;padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
 .kpi .v{font-family:var(--f-num);font-size:1.3rem;font-weight:600;font-variant-numeric:tabular-nums}
 .kpi .s{font-size:.78rem;color:var(--muted)}
 .minis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 14px}
@@ -170,7 +195,7 @@ label.btn{display:inline-flex;align-items:center;cursor:pointer}
 .minis span:first-child{color:var(--muted)}
 
 /* Spese fisse */
-.sp{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.sp{background:var(--surface);border:0;border-radius:20px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
 .sp.past .dim{opacity:.55}
 .sp-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
 .sp-name{font-weight:600;font-size:1rem;min-width:0}
@@ -181,11 +206,11 @@ label.btn{display:inline-flex;align-items:center;cursor:pointer}
 .simgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .simcol{background:var(--bg);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:3px;min-width:0}
 .simcol .v{font-family:var(--f-num);font-weight:600;font-size:1.05rem}
-.simcol.win{background:var(--paid-soft)}
-.simcol.win .v{color:var(--paid)}
+.simcol.win{background:var(--good-soft)}
+.simcol.win .v{color:var(--good)}
 
 /* Grafici */
-.chart{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 12px 10px;display:flex;flex-direction:column;gap:8px}
+.chart{background:var(--surface);border:0;border-radius:20px;padding:14px 12px 10px;display:flex;flex-direction:column;gap:8px}
 .chart-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;padding-inline:4px}
 .legend{display:flex;gap:14px;font-size:.78rem;color:var(--muted)}
 .legend span::before{content:"";display:inline-block;width:14px;height:0;border-top:2.5px solid var(--debt);margin-right:6px;vertical-align:middle}
@@ -194,7 +219,7 @@ svg text{fill:var(--muted);font-family:var(--f-num);font-size:10px}
 
 /* Storico */
 .hist{display:flex;flex-direction:column;gap:6px}
-.hist ul{list-style:none;margin:0;padding:0;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.hist ul{list-style:none;margin:0;padding:0;background:var(--surface);border:0;border-radius:20px}
 .hist li{display:grid;grid-template-columns:54px minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:9px 14px;border-top:1px solid var(--line);font-size:.9rem}
 .hist li:first-child{border-top:0}
 .hist .d{font-family:var(--f-num);font-size:.8rem;color:var(--muted)}
@@ -342,6 +367,11 @@ const GIORNI = ["domenica","lunedì","martedì","mercoledì","giovedì","venerd�
 const FREQ = {mensile:{m:1,l:"Mensile"},trimestrale:{m:3,l:"Trimestrale"},semestrale:{m:6,l:"Semestrale"},annuale:{m:12,l:"Annuale"},una:{m:0,l:"Una tantum"}};
 const CATS = ["Spesa","Cibo fuori","Benzina","Trasporti","Uscite","Regali","Salute","Casa","Altro"];
 const $ = id => document.getElementById(id);
+const PAL=["c1","c2","c3","c4","c5","c6"];
+const CATCOL={"Spesa":"c2","Cibo fuori":"c6","Benzina":"c5","Trasporti":"c4","Uscite":"c1","Regali":"c3","Salute":"c2","Casa":"c4","Altro":"c3"};
+function colOf(k){ if(CATCOL[k]) return CATCOL[k]; let h=0; for(const ch of String(k)) h=(h*31+ch.charCodeAt(0))>>>0; return PAL[h%PAL.length]; }
+function ico(k,label,lg){ const c=colOf(k); return `<i class="ico${lg?" lg":""}" style="--c:var(--${c});--cs:var(--${c}s)" aria-hidden="true">${esc(String(label||k).trim().charAt(0).toUpperCase())}</i>`; }
+function bigEur(n){ const t=eur.format(n).replace(/\s?€/,""); return t+'<span class="u">€</span>'; }
 const r2 = n => Math.round(n*100)/100;
 const it = n => r2(Number(n)||0).toFixed(2).replace(".",",");
 const sum = a => a.reduce((s,x)=>s+x.amt,0);
@@ -504,13 +534,13 @@ function renderBudget(today,ev){
   else pill=`<span class="pill warn">A questo ritmo (${eur.format(b.media)}/giorno) vai sotto di ${eur0.format(-b.proiez)}: resta sotto ${eur0.format(perDay)}/giorno</span>`;
   const sub=items=>`<div class="sublines">${items.map(i=>`<div class="${i.done?"done":""}"><span class="num">${fmtD(i.date)}</span><span>${esc(i.nome)}${i.done?" ✓":""}</span><span class="num">${eur.format(i.amt)}</span></div>`).join("")||'<div><span></span><span>Nessuna</span><span></span></div>'}</div>`;
   box.innerHTML=`
-    <div class="sec-head"><h2>Budget del mese</h2><span class="label">${fmtD(c.start)} → ${fmtD(c.end)}</span></div>
-    <div class="stack" style="gap:6px">
+    <div class="sec-head"><h2>Budget del mese</h2><span class="eyebrow">${fmtD(c.start)} → ${fmtD(c.end)}</span></div>
+    <div class="hero">
       <span class="label">Ti restano per vivere</span>
-      <div class="big num ${b.resta<0?"neg":""}">${eur.format(b.resta)}</div>
+      <div class="big num">${bigEur(b.resta)}</div>
       <p class="sub"><b>${eur.format(perDay)}</b> al giorno per ${b.left} ${plur(b.left,"giorno","giorni")}</p>
+      ${pill}
     </div>
-    ${pill}
     <div class="lines">
       <div class="line"><span>Stipendio${c.cur.extra?" + extra":""}</span><span class="num">${eur.format(b.entr)}</span></div>
       <details><summary><span>Rate prestiti</span><span class="num">−${eur.format(b.sR)}</span></summary>${sub(b.rate)}</details>
@@ -534,7 +564,7 @@ function renderCats(today){
   const g={}; m.forEach(x=>g[x.cat]=(g[x.cat]||0)+x.importo);
   const rows=Object.entries(g).sort((a,b)=>b[1]-a[1]); const max=rows.length?rows[0][1]:1;
   $("cats-tot").textContent=m.length?eur.format(rows.reduce((a,r)=>a+r[1],0)):"";
-  $("cats").innerHTML= rows.length? rows.map(([k,v])=>`<div class="catbar"><span>${esc(k)}</span><span class="t"><i style="width:${(v/max*100).toFixed(1)}%"></i></span><span class="num">${eur.format(v)}</span></div>`).join("")
+  $("cats").innerHTML= rows.length? rows.map(([k,v])=>`<div class="catbar"><span class="ico-row">${ico(k)}${esc(k)}</span><span class="t"><i style="width:${(v/max*100).toFixed(1)}%;--c:var(--${colOf(k)})"></i></span><span class="num">${eur.format(v)}</span></div>`).join("")
     : '<p class="muted">Quando segni le spese, qui vedi in quali categorie spendi di più.</p>';
 }
 function renderMovs(today){
@@ -543,7 +573,7 @@ function renderMovs(today){
   const shown=showAllMovs?list:list.slice(0,8);
   $("movs").innerHTML= list.length? shown.map(m=>{
     if(editing&&editing.kind==="mov"&&editing.id===m.id) return `<li class="editrow">${movForm(m)}</li>`;
-    return `<li><span class="d">${fmtD(m.data)}</span><span>${esc(m.cat)}</span><span class="num">${eur.format(m.importo)}</span><button class="mbtn" data-editmov="${m.id}" ${canWrite?"":"disabled"} aria-label="Modifica o elimina questa spesa">Modifica</button></li>`;
+    return `<li><span class="d">${fmtD(m.data)}</span><span class="ico-row">${ico(m.cat)}${esc(m.cat)}</span><span class="num">${eur.format(m.importo)}</span><button class="mbtn" data-editmov="${m.id}" ${canWrite?"":"disabled"} aria-label="Modifica o elimina questa spesa">Modifica</button></li>`;
   }).join("")
     : '<li><span></span><span style="color:var(--muted)">Nessuna spesa segnata in questo mese. Tocca + Spesa in alto per aggiungerne una.</span><span></span><span></span></li>';
   $("more-movs").hidden= list.length<=8 || showAllMovs;
@@ -577,7 +607,7 @@ function renderNext(today){
 /* Prestiti */
 function renderTop(ev){
   const iniz=loans.reduce((a,l)=>a+l.iniziale,0), res=loans.reduce((a,l)=>a+residuo(l),0), paid=iniz-res;
-  $("tot").textContent=eur.format(res);
+  $("tot").innerHTML=bigEur(res);
   $("paid").textContent=eur0.format(paid);
   $("start").textContent=eur0.format(iniz);
   $("end").textContent= !loans.length?"—" : res<0.01?"fatto ✓" : (ev.length?fmtM(ev[ev.length-1].date):"—");
@@ -617,7 +647,7 @@ function renderLoans(today,ev){
     const chip= done?'<span class="chip ok">Estinto ✓</span>' : (l.tasso>0?`<span class="chip hot">${it(l.tasso)}% · da attaccare</span>`:'<span class="chip">Tasso 0%</span>');
     return `<article class="loan ${l.tasso>0&&!done?"cost":""} ${done?"done":""}">
       <div class="dim stack">
-        <div class="loan-head"><span class="loan-name">${esc(l.nome)}</span>${chip}</div>
+        <div class="loan-head"><span class="ico-row">${ico(l.id,l.nome,1)}<span class="loan-name">${esc(l.nome)}</span></span>${chip}</div>
         <div class="loan-head"><span class="loan-res">${eur.format(r)}</span><span class="label">${Math.round(lp)}% rimborsato</span></div>
         <div class="bar"><i style="width:${lp.toFixed(1)}%"></i></div>
         <div class="facts">
@@ -716,7 +746,7 @@ function renderSpese(today){
     const lastPaid=pag.filter(d=>d>=cyc.start).sort().pop();
     return `<article class="sp ${s.next?"":"past"}">
       <div class="dim stack" style="gap:6px">
-        <div class="sp-row"><span class="sp-name">${esc(s.nome)}</span><span class="sp-amt">${eur.format(s.importo)}</span></div>
+        <div class="sp-row"><span class="ico-row">${ico(s.id,s.nome)}<span class="sp-name">${esc(s.nome)}</span></span><span class="sp-amt">${eur.format(s.importo)}</span></div>
         <div class="sp-meta">
           <span class="chip ${f.m===0?"warn":""}">${f.l}</span>
           ${s.fonte?`<span class="chip ok">dal salvadanaio ${esc(svName[s.fonte]||"")}</span>`:""}
@@ -1035,7 +1065,7 @@ function fitSheet(){ const vv=window.visualViewport; if(!vv) return; const off=M
 if(window.visualViewport){ visualViewport.addEventListener("resize",fitSheet); visualViewport.addEventListener("scroll",fitSheet); }
 $("scrim").addEventListener("click",closeSheet);
 document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&!$("sheet").hidden) closeSheet(); });
-$("catgrid").innerHTML=CATS.map(c=>`<button class="cat" data-cat="${c}">${c}</button>`).join("");
+$("catgrid").innerHTML=CATS.map(c=>`<button class="cat" data-cat="${c}" style="--cs:var(--${colOf(c)}s)">${ico(c)}${c}</button>`).join("");
 render();
 
 /* ---------- database locale (salvato sul telefono) ---------- */
